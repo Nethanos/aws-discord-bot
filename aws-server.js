@@ -1,9 +1,7 @@
 
 const AWS_CONFIG = require('./config');
 const EBS = require('aws-sdk/clients/elasticbeanstalk');
-const createVerifySearchList = require('./helper');
-
-
+const {createVerifySearchList, formatAnswer} = require('./helpers');
 
 const ebs = new EBS(AWS_CONFIG);
 
@@ -11,13 +9,9 @@ async function checkUsedEnvironments(projectName) {
 
     usedEnvironments = [];
 
-    const environmentNames = createVerifySearchList(projectName);
+    const EnvironmentNames = createVerifySearchList(projectName);
 
-    var params = {
-        EnvironmentNames: environmentNames
-    };
-
-    const searchEnvironments = ebs.describeEnvironments(params);
+    const searchEnvironments = ebs.describeEnvironments({EnvironmentNames});
 
     const data = await searchEnvironments.promise();
 
@@ -26,9 +20,8 @@ async function checkUsedEnvironments(projectName) {
     for (let env of environments) {
         usedEnvironments.push(env.Description);
     }
-    console.log("Verifys:", usedEnvironments)
 
-    return usedEnvironments;
+    return formatAnswer(usedEnvironments);
 
 }
 
