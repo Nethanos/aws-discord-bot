@@ -1,22 +1,22 @@
+const checkUsedEnvironments = require('./aws-server');
+require('dotenv/config');
+const Discord = require('discord.js');
+const client = new Discord.Client();
 
-const AWS_CONFIG = require('./config');
-const EBS = require('aws-sdk/clients/elasticbeanstalk');
-const createVerifySearchList = require('./helper');
+async function searchProjectVerify(projectName) {
+    const resposta = await checkUsedEnvironments(projectName);
 
-const elasticbeanstalk = new EBS(AWS_CONFIG);
+    return resposta;
+}
 
+client.on('message', msg => {
+    if(msg.content.includes('verify projeto=hub')){
+       const projectName = msg.content.split('=')[1];
+       searchProjectVerify(projectName).then(response => {
+           msg.reply(`Os verifys do projeto ${projectName} em uso são: ${response}`);
+       })
 
-const environmentNames = createVerifySearchList('hub');
-
-var params = {
-    EnvironmentNames: environmentNames
-   };
-
-elasticbeanstalk.describeEnvironments(params, (err, data) => {
-    const environments = data.Environments;
-
-    console.log("Lista de verifys no ar:")
-    for(let env of environments) {
-        console.log(env.Description);
     }
-})
+  });
+  
+  client.login(process.env.DISCORD_TOKEN);
