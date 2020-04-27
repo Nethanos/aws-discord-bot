@@ -1,9 +1,13 @@
-const checkUsedEnvironments = require('./aws-server');
+const checkUsedEnvironments = require('./aws/aws-server');
 require('dotenv/config');
 const Discord = require('discord.js');
 const client = new Discord.Client();
+const express = require('express');
+
+const app = express();
 
 const applicationNames = require('./applications.json').applicationNames;
+
 
 
 
@@ -52,8 +56,16 @@ function manageAnswers(msg, projectName) {
     }
 
 }
-
-
 client.login(process.env.DISCORD_TOKEN);
+
+
+app.listen(process.env.PORT, () => {
+    console.log(`APPLICATION STARTED AT ${process.env.PORT}`)
+})
+
+
+app.get("/", (req, res) => {
+    res.send("Olá, sou Elastiquinho!")
+})
 
 

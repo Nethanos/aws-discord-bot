@@ -1,7 +1,7 @@
 
-const AWS_CONFIG = require('./config');
+const AWS_CONFIG = require('../config/config');
 const EBS = require('aws-sdk/clients/elasticbeanstalk');
-const {createVerifySearchList, formatAnswer} = require('./helpers');
+const {createVerifySearchList, formatAnswer} = require('../helpers/helpers');
 
 const ebs = new EBS(AWS_CONFIG);
 
