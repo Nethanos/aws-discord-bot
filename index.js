@@ -15,7 +15,7 @@ client.on('message', msg => {
 
         const [mention, targetService, ...parameters] = msg.content.split(' ');
 
-        if(msg.content.includes("-help")) {
+        if(targetService == '-help') {
             getCommandMessageList(msg.channel);
         }
 
