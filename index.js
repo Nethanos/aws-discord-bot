@@ -1,6 +1,7 @@
 const express = require('express');
 const Discord = require('discord.js');
 const handleEBSOperation = require('./managers/ebs-manager/ebs-operation-manager');
+const getCommandMessageList = require('./managers/bot-manager/bot-helper-manager');
 
 const client = new Discord.Client();
 const app = express();
@@ -11,7 +12,12 @@ client.on('message', msg => {
     let users = msg.mentions.users;
     
     if (users.find((user) => user == client.user)) {
+
         const [mention, targetService, ...parameters] = msg.content.split(' ');
+
+        if(targetService == '-help') {
+            getCommandMessageList(msg.channel);
+        }
 
         if (targetService === 'ebs') {
             handleEBSOperation(msg, ...parameters);

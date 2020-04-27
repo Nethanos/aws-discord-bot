@@ -1,0 +1,11 @@
+{
+    "commands": [
+        {
+            "ebs": {
+                "applicationName": "ebs",    
+                "messageList": ["verify nomeDoProjeto  -  Buscar verifys que estão no ar."]
+            }
+
+        }
+    ]
+}
