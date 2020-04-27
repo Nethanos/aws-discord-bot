@@ -1,15 +1,13 @@
-const checkUsedEnvironments = require('./aws/aws-server');
-require('dotenv/config');
-const Discord = require('discord.js');
-const client = new Discord.Client();
 const express = require('express');
+const Discord = require('discord.js');
+const checkUsedEnvironments = require('./aws/aws-server');
+const applicationNames = ['']; //require('./applications.json').applicationNames;
+const handleEBSOperation = require('./managers/ebs-manager/ebs-operation-manager');
 
+const client = new Discord.Client();
 const app = express();
 
-const applicationNames = require('./applications.json').applicationNames;
-
-
-
+require('dotenv/config');
 
 function isThisProjectExists(projectName) {
     return applicationNames.some((project) => project === projectName);
@@ -21,26 +19,26 @@ async function searchProjectVerify(projectName) {
 
 client.on('message', msg => {
     let users = msg.mentions.users;
+    
     if (users.find((user) => user == client.user)) {
-        if (msg.content.includes('verify ')) {
-            const msgArray = msg.content.split(' ');
+        const [mention, targetService, ...parameters] = msg.content.split(' ');
 
-            msg.reply("Ok, vou procurar...");
+        if (targetService === 'ebs') {
+            //const [serverType, project] = [...parameters];
+            handleEBSOperation(msg, ...parameters);
 
-            const projectName = msgArray.pop();
-
-            manageAnswers(msg, projectName);
+            //if (serverType === 'verify') {
+               // manageAnswers(msg, project);
+            //}
         }
 
     }
-
 });
 
-
 function manageAnswers(msg, projectName) {
+    msg.reply("Ok, vou procurar...");
 
     if (projectName && isThisProjectExists(projectName)) {
-
         searchProjectVerify(projectName).then(response => {
             if(response.length){
                 projectName = projectName.toLocaleUpperCase();
@@ -50,12 +48,12 @@ function manageAnswers(msg, projectName) {
             }
 
         })
-    }
-    else {
+    } else {
         msg.reply("Este projeto não existe minha amigo");
     }
 
 }
+
 client.login(process.env.DISCORD_TOKEN);
 
 

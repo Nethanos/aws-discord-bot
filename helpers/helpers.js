@@ -11,4 +11,4 @@ function formatAnswer(list){
 }
 
 
-module.exports = {createVerifySearchList, formatAnswer };
+module.exports = { createVerifySearchList, formatAnswer };
